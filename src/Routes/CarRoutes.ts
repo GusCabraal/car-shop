@@ -7,5 +7,7 @@ const carService = new CarService();
 const carController = new CarController(carService);
 
 router.post('/', carController.create);
+router.get('/', carController.getAllCars);
+router.get('/:id', carController.getCarById);
 
 export default router;
