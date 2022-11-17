@@ -1,4 +1,5 @@
-import { Schema } from 'mongoose';
+import { isValidObjectId, Schema, UpdateQuery } from 'mongoose';
+import { UnprocessableError } from '../Errors';
 import ICar from '../Interfaces/ICar';
 import AbstractODM from './AbstractODM';
 
@@ -21,11 +22,23 @@ class CarODM extends AbstractODM<ICar> {
   }
 
   public async getCarById(id: string): Promise<ICar | null> {
+    if (!isValidObjectId(id)) throw new UnprocessableError('Invalid mongo id');
+    
     return this.model.findById(id);
   }
 
   public async getAllCars(): Promise<ICar[]> {
     return this.model.find({});
+  }
+
+  public async update(_id: string, obj: Partial<ICar>): Promise<ICar | null> {
+    if (!isValidObjectId(_id)) throw new UnprocessableError('Invalid mongo id');
+    
+    return this.model.findByIdAndUpdate(
+      { _id },
+      { ...obj } as UpdateQuery<ICar>,
+      { new: true },
+    );
   }
 }
 

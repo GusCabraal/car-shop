@@ -9,5 +9,6 @@ const carController = new CarController(carService);
 router.post('/', carController.create);
 router.get('/', carController.getAllCars);
 router.get('/:id', carController.getCarById);
+router.put('/:id', carController.updateCarById);
 
 export default router;
