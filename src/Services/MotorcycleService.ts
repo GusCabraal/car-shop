@@ -1,39 +1,44 @@
 import Motorcycle from '../Domains/Motorcycle';
 import { NotFoundError } from '../Errors';
 import IMotorcycle from '../Interfaces/IMotorcycle';
-import MotorcycleODOM from '../Models/MotorcycleODM';
+import AbstractService from './AbstractService';
 
-class MotorcycleService {
-  createMotorcycleDomain(motorcycle: IMotorcycle | null): Motorcycle | null {
-    if (motorcycle) {
-      return new Motorcycle(motorcycle);
-    }
-    return null;
+class MotorcycleService extends AbstractService<IMotorcycle> {
+  createDomain(motorcycle: IMotorcycle): Motorcycle {
+    return new Motorcycle(motorcycle);
   }
     
-  public async create(motorcycle: IMotorcycle): Promise<Motorcycle | null> {
-    const MotorcycleODM = new MotorcycleODOM();
-    const newMotorcycle = await MotorcycleODM.create(motorcycle);
-    const MotorcycleTyped = this.createMotorcycleDomain(newMotorcycle);
+  public async createMotorcycle(motorcycle: IMotorcycle): Promise<Motorcycle> {
+    const newMotorcycle = await this.create(motorcycle);
+
+    if (!newMotorcycle) throw new Error('Deu ruim');
+
+    const MotorcycleTyped = this.createDomain(newMotorcycle);
     return MotorcycleTyped;
   }
 
   public async getAllMotorcycles(): Promise<Motorcycle[]> {
-    const motorcycleODM = new MotorcycleODOM();
-    const motorcycles = await motorcycleODM.getAll();
-
+    const motorcycles = await this.getAll();
     const motorcyclesTyped = motorcycles
-      .map((motorcycle) => this.createMotorcycleDomain(motorcycle));
-    return motorcyclesTyped as Motorcycle[];
+      .map((motorcycle) => this.createDomain(motorcycle));
+    return motorcyclesTyped;
   }
 
-  public async getMotorcycleById(id: string): Promise<Motorcycle | null | void> {
-    const motorcycleODM = new MotorcycleODOM();
-    const motorcycle = await motorcycleODM.getById(id);
+  public async getMotorcycleById(id: string): Promise<Motorcycle | void> {
+    const motorcycle = await this.getById(id);
 
     if (!motorcycle) throw new NotFoundError('Motorcycle not found');
     
-    const motorcycleTyped = this.createMotorcycleDomain(motorcycle);
+    const motorcycleTyped = this.createDomain(motorcycle);
+    return motorcycleTyped;
+  }
+
+  public async updateMotorcycleById(id: string, obj: IMotorcycle): Promise<Motorcycle | void> {
+    const motorcycle = await this.getById(id);
+    if (!motorcycle) throw new NotFoundError('Motorcycle not found');
+
+    const newMotorcycle = await this.update(id, obj);
+    const motorcycleTyped = this.createDomain(newMotorcycle);
     return motorcycleTyped;
   }
 }

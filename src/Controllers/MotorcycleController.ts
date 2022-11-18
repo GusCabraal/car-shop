@@ -8,8 +8,8 @@ export default class MotorcycleController {
     this._motorcycleService = motorcycleService;
   }
 
-  public create = async (req: Request, res: Response) => {
-    const newMotorcycle = await this._motorcycleService.create({ ...req.body });
+  public createMotorcycle = async (req: Request, res: Response) => {
+    const newMotorcycle = await this._motorcycleService.createMotorcycle({ ...req.body });
     return res.status(201).json(newMotorcycle);
   };
 
@@ -23,6 +23,16 @@ export default class MotorcycleController {
       const { id } = req.params;
       const motorcycle = await this._motorcycleService.getMotorcycleById(id);
       return res.status(200).json(motorcycle);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updateMotorcycleById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { params: { id }, body } = req;
+      const car = await this._motorcycleService.updateMotorcycleById(id, body);
+      return res.status(200).json(car);
     } catch (error) {
       next(error);
     }
