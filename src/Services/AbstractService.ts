@@ -6,8 +6,8 @@ abstract class AbstractService<T> {
   constructor(model: AbstractODM<T>) {
     this.model = model;
   }
-    
-  public async create(obj: T): Promise<T | null> {
+
+  public async create(obj: T): Promise<T > {
     const newObj = await this.model.create(obj);
     return newObj;
   }

@@ -11,8 +11,6 @@ class MotorcycleService extends AbstractService<IMotorcycle> {
   public async createMotorcycle(motorcycle: IMotorcycle): Promise<Motorcycle> {
     const newMotorcycle = await this.create(motorcycle);
 
-    if (!newMotorcycle) throw new Error('Deu ruim');
-
     const MotorcycleTyped = this.createDomain(newMotorcycle);
     return MotorcycleTyped;
   }

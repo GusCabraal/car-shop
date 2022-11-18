@@ -1,5 +1,5 @@
 export default class UnprocessableError extends Error {
-  private status;
+  public status;
   constructor(message: string) {
     super(message);
     this.name = 'UnprocessableEntityError';

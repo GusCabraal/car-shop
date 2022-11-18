@@ -11,15 +11,13 @@ class CarService extends AbstractService<ICar> {
   public async createCar(car: ICar): Promise<Car | null> {
     const newCar = await this.create(car);
 
-    if (!newCar) throw new Error('Deu ruim');
-    
     const carTyped = this.createCarDomain(newCar);
     return carTyped;
   }
 
   public async getAllCars(): Promise<Car[]> {
     const cars = await this.getAll();
-
+  
     const carsTyped = cars.map((car) => this.createCarDomain(car));
     return carsTyped;
   }
