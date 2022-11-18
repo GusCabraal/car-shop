@@ -1,7 +1,8 @@
 import IVehicle from './IVehicle';
+import CategoryType from './CategoryType';
 
-interface IMotocycle extends IVehicle{
-  category: 'Street' | 'Custom' | 'Trail';
+interface IMotocycle extends IVehicle {
+  category: CategoryType;
   engineCapacity: number;
 }
   
