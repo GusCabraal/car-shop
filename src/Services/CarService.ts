@@ -20,7 +20,7 @@ class CarService {
 
   public async getAllCars(): Promise<Car[]> {
     const carODM = new CarODOM();
-    const cars = await carODM.getAllCars();
+    const cars = await carODM.getAll();
 
     const carsTyped = cars.map((car) => this.createCarDomain(car));
     return carsTyped as Car[];
@@ -28,7 +28,7 @@ class CarService {
 
   public async getCarById(id: string): Promise<Car | null | void> {
     const carODM = new CarODOM();
-    const car = await carODM.getCarById(id);
+    const car = await carODM.getById(id);
 
     if (!car) throw new NotFoundError('Car not found');
     
@@ -38,7 +38,7 @@ class CarService {
 
   public async updateCarById(id: string, obj: ICar): Promise<Car | null | void> {
     const carODM = new CarODOM();
-    const car = await carODM.getCarById(id);
+    const car = await carODM.getById(id);
     if (!car) throw new NotFoundError('Car not found');
 
     const newCar = await carODM.update(id, obj);

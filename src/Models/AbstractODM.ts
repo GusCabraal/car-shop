@@ -3,7 +3,9 @@ import {
   models,
   Schema,
   model,
+  isValidObjectId,
 } from 'mongoose';
+import { UnprocessableError } from '../Errors';
   
 abstract class AbstractODM<T> {
   protected model: Model<T>;
@@ -18,6 +20,16 @@ abstract class AbstractODM<T> {
   
   public async create(obj: T): Promise<T> {
     return this.model.create({ ...obj });
+  }
+
+  public async getAll(): Promise<T[]> {
+    return this.model.find({});
+  }
+
+  public async getById(id: string): Promise<T | null> {
+    if (!isValidObjectId(id)) throw new UnprocessableError('Invalid mongo id');
+    
+    return this.model.findById(id);
   }
 }
   
