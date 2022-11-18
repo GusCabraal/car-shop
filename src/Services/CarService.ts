@@ -1,34 +1,31 @@
 import Car from '../Domains/Car';
 import { NotFoundError } from '../Errors';
 import ICar from '../Interfaces/ICar';
-import CarODOM from '../Models/CarODM';
+import AbstractService from './AbstractService';
 
-class CarService {
-  createCarDomain(car: ICar | null): Car | null {
-    if (car) {
-      return new Car(car);
-    }
-    return null;
+class CarService extends AbstractService<ICar> {
+  createCarDomain(car: ICar): Car {
+    return new Car(car);
   }
     
-  public async create(car: ICar): Promise<Car | null> {
-    const carODM = new CarODOM();
-    const newCar = await carODM.create(car);
+  public async createCar(car: ICar): Promise<Car | null> {
+    const newCar = await this.create(car);
+
+    if (!newCar) throw new Error('Deu ruim');
+    
     const carTyped = this.createCarDomain(newCar);
     return carTyped;
   }
 
   public async getAllCars(): Promise<Car[]> {
-    const carODM = new CarODOM();
-    const cars = await carODM.getAll();
+    const cars = await this.getAll();
 
     const carsTyped = cars.map((car) => this.createCarDomain(car));
-    return carsTyped as Car[];
+    return carsTyped;
   }
 
-  public async getCarById(id: string): Promise<Car | null | void> {
-    const carODM = new CarODOM();
-    const car = await carODM.getById(id);
+  public async getCarById(id: string): Promise<Car | void> {
+    const car = await this.getById(id);
 
     if (!car) throw new NotFoundError('Car not found');
     
@@ -36,12 +33,11 @@ class CarService {
     return carTyped;
   }
 
-  public async updateCarById(id: string, obj: ICar): Promise<Car | null | void> {
-    const carODM = new CarODOM();
-    const car = await carODM.getById(id);
+  public async updateCarById(id: string, obj: ICar): Promise<Car | void> {
+    const car = await this.getById(id);
     if (!car) throw new NotFoundError('Car not found');
 
-    const newCar = await carODM.update(id, obj);
+    const newCar = await this.update(id, obj);
     const carTyped = this.createCarDomain(newCar);
     return carTyped;
   }

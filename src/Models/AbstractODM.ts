@@ -4,6 +4,7 @@ import {
   Schema,
   model,
   isValidObjectId,
+  UpdateQuery,
 } from 'mongoose';
 import { UnprocessableError } from '../Errors';
   
@@ -30,6 +31,16 @@ abstract class AbstractODM<T> {
     if (!isValidObjectId(id)) throw new UnprocessableError('Invalid mongo id');
     
     return this.model.findById(id);
+  }
+
+  public async update(_id: string, obj: Partial<T>): Promise<T | null> {
+    if (!isValidObjectId(_id)) throw new UnprocessableError('Invalid mongo id');
+    
+    return this.model.findByIdAndUpdate(
+      { _id },
+      { ...obj } as UpdateQuery<T>,
+      { new: true },
+    );
   }
 }
   
