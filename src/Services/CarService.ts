@@ -37,8 +37,6 @@ class CarService {
   }
 
   public async updateCarById(id: string, obj: ICar): Promise<Car | null | void> {
-    // if (id.length !== 24) throw new UnprocessableError('Invalid mongo id');
-    
     const carODM = new CarODOM();
     const car = await carODM.getCarById(id);
     if (!car) throw new NotFoundError('Car not found');
