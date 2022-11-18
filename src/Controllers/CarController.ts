@@ -13,6 +13,11 @@ export default class CarController {
     return res.status(201).json(newCar);
   };
 
+  public getAllCars = async (_req: Request, res: Response) => {
+    const cars = await this._carService.getAllCars();
+    return res.status(200).json(cars);
+  };
+  
   public getCarById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -30,10 +35,5 @@ export default class CarController {
     } catch (error) {
       next(error);
     }
-  };
-
-  public getAllCars = async (_req: Request, res: Response) => {
-    const cars = await this._carService.getAllCars();
-    return res.status(200).json(cars);
   };
 }

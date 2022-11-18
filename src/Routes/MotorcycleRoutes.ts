@@ -7,5 +7,7 @@ const service = new Service();
 const controller = new Controller(service);
 
 router.post('/', controller.create);
+router.get('/', controller.getAllMotorcycles);
+router.get('/:id', controller.getMotorcycleById);
 
 export default router;
